@@ -1,0 +1,7 @@
+version: '3.9'
+
+services:
+  hello-world:
+    build:
+      context: .
+      dockerfile: build/helloworld.Dockerfile
