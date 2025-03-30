@@ -1,0 +1,2 @@
+database_connection: "postgresql://user:password@postgresql:5432/composer_db"
+composer_address: ":8080"
