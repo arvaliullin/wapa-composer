@@ -3,6 +3,7 @@ package persistence
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 
 	"github.com/arvaliullin/wapa-composer/internal/domain"
 )
@@ -32,9 +33,15 @@ func (repo *DesignRepository) withConnection(action Action) error {
 func (repo *DesignRepository) Create(design domain.Design) error {
 	return repo.withConnection(func(conn *sql.DB) error {
 		query := `
-			INSERT INTO composer.design (name, description, js_filename, wasm_filename)
-			VALUES ($1, $2, $3, $4)`
-		_, err := conn.Exec(query, design.Name, design.Description, design.JSFilename, design.WASMFilename)
+            INSERT INTO composer.design (name, description, js_filename, wasm_filename)
+            VALUES ($1, $2, $3, $4)`
+
+		descriptionJSON, err := json.Marshal(design.Description)
+		if err != nil {
+			return errors.New("failed to serialize description: " + err.Error())
+		}
+
+		_, err = conn.Exec(query, design.Name, descriptionJSON, design.JSFilename, design.WASMFilename)
 		return err
 	})
 }

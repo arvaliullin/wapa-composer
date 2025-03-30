@@ -18,8 +18,8 @@ func RegisterDesignHandler(httpService delivery.HttpService, repo persistence.De
 	handler := &DesignHandler{repo: repo}
 	e := httpService.(*delivery.EchoHttpService).Echo
 	e.GET("/api/designs", handler.GetAll)
-	e.POST("/api/designs", handler.Create)
-	e.DELETE("/api/designs/:id", handler.Delete)
+	e.POST("/api/design", handler.Create)
+	e.DELETE("/api/design/:id", handler.Delete)
 }
 
 // GetAll получает список планов экспериментов
@@ -43,7 +43,7 @@ func (h *DesignHandler) GetAll(c echo.Context) error {
 
 // Create создает новый план эксперимента
 // @Summary создает новый план эксперимента
-// @Description Создает новый план эксперимента.
+// @Description Создает новый план эксперимента
 // @Tags Design
 // @Accept json
 // @Produce json
@@ -51,14 +51,16 @@ func (h *DesignHandler) GetAll(c echo.Context) error {
 // @Success 201 {object} string "Создано"
 // @Failure 400 {object} string "Неверный запрос"
 // @Failure 500 {object} string "Ошибка сервера"
-// @Router /api/designs [post]
+// @Router /api/design [post]
 func (h *DesignHandler) Create(c echo.Context) error {
 	var design domain.Design
 	if err := c.Bind(&design); err != nil {
-		return c.JSON(http.StatusBadRequest, "Неверный запрос")
+		msg := fmt.Sprintf("Неверный запрос: %v", err)
+		return c.JSON(http.StatusBadRequest, msg)
 	}
 	if err := h.repo.Create(design); err != nil {
-		return c.JSON(http.StatusInternalServerError, "Ошибка сервера")
+		msg := fmt.Sprintf("Ошибка сервера: %v", err)
+		return c.JSON(http.StatusInternalServerError, msg)
 	}
 	return c.JSON(http.StatusCreated, "Создано")
 }
@@ -72,7 +74,7 @@ func (h *DesignHandler) Create(c echo.Context) error {
 // @Success 200 {object} string "Удалено"
 // @Failure 400 {object} string "Неверный запрос"
 // @Failure 500 {object} string "Ошибка сервера"
-// @Router /api/designs/{id} [delete]
+// @Router /api/design/{id} [delete]
 func (h *DesignHandler) Delete(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {

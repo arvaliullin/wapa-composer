@@ -3,8 +3,10 @@ package delivery
 import (
 	"net/http"
 
+	_ "github.com/arvaliullin/wapa-composer/docs"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	swagger "github.com/swaggo/echo-swagger"
 )
 
 type EchoHttpService struct {
@@ -23,6 +25,8 @@ func NewEchoHttpService() *EchoHttpService {
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 	}))
+
+	e.GET("/swagger/*", swagger.WrapHandler)
 
 	return &EchoHttpService{
 		Echo: e,
