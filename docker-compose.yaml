@@ -17,6 +17,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init/db:/docker-entrypoint-initdb.d
 
   composer:
     build:
@@ -29,6 +30,9 @@ services:
       - "8080:8080"
     volumes:
       - composer_data:/opt/composer/data
+    depends_on:
+      - postgres
+      - nats
 
 volumes:
   composer_data:
