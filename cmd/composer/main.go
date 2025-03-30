@@ -4,6 +4,7 @@ import (
 	"flag"
 
 	"github.com/arvaliullin/wapa-composer/internal/app"
+	_ "github.com/lib/pq"
 )
 
 func main() {

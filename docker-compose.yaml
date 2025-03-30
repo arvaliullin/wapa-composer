@@ -7,16 +7,14 @@ services:
       - "4222:4222"
       - "8222:8222"
 
-  postgresql:
+  database:
     image: postgres:latest
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: composer_db
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
       - ./init/db:/docker-entrypoint-initdb.d
 
   composer:
@@ -24,16 +22,15 @@ services:
       context: .
       dockerfile: build/composer.Dockerfile
     environment:
-      COMPOSER_DB_CONNECTION: "postgresql://user:password@postgresql:5432/composer_db"
+      COMPOSER_DB_CONNECTION: "postgresql://postgres:password@database:5432/postgres?sslmode=disable"
       COMPOSER_NATS_URL: "nats://nats:4222"
     ports:
       - "8080:8080"
     volumes:
       - composer_data:/opt/composer/data
     depends_on:
-      - postgres
+      - database
       - nats
 
 volumes:
   composer_data:
-  postgres_data:

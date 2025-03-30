@@ -24,10 +24,6 @@ func NewEchoHttpService() *EchoHttpService {
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 	}))
 
-	e.GET("/api/helloworld", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
-
 	return &EchoHttpService{
 		Echo: e,
 	}

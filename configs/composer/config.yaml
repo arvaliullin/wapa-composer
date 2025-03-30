@@ -1,2 +1,2 @@
-database_connection: "postgresql://user:password@postgresql:5432/composer_db"
+database_connection: "postgresql://postgres:password@database:5432/postgres?sslmode=disable"
 composer_address: ":8080"
