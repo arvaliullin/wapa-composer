@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 
 	"github.com/nats-io/nats.go"
@@ -13,6 +14,18 @@ func main() {
 	}
 	defer nc.Close()
 
-	nc.Publish("hello", []byte("Message"))
+	message := map[string]string{
+		"type":    "example",
+		"content": "This is a JSON message",
+	}
 
+	jsonData, err := json.Marshal(message)
+	if err != nil {
+		log.Fatalf("JSON marshaling error: %v", err)
+	}
+
+	err = nc.Publish("default_runner", jsonData)
+	if err != nil {
+		log.Fatalf("Publish error: %v", err)
+	}
 }
